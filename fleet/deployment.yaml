@@ -2,10 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: my-website
-  labels:
-    app: my-website
 spec:
-  replicas: 2  # Adjust replicas as needed
+  replicas: 2
   selector:
     matchLabels:
       app: my-website
@@ -15,14 +13,7 @@ spec:
         app: my-website
     spec:
       containers:
-        - name: my-portfolio
-          image: hoffeloffe/my-portfolio:latest
+        - name: my-website
+          image: "hoffeloffe/my-website:latest"
           ports:
             - containerPort: 3000
-          resources:
-            limits:
-              memory: "256Mi"
-              cpu: "500m"
-          env:
-          - name: NODE_ENV
-            value: "production"

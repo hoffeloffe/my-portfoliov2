@@ -1,35 +1,34 @@
 # Step 1: Build the app
-FROM node:18-alpine as builder
+FROM node:18-alpine AS builder
 
 # Set working directory
 WORKDIR /app
 
-# Copy the package.json and package-lock.json to the container
+# Copy package.json and package-lock.json
 COPY app/package.json app/package-lock.json ./
 
 # Install dependencies
 RUN npm install
 
-# Copy all files into the container
-COPY . .
+# Copy only the necessary files (avoid copying fleet/ or unwanted files)
+COPY app ./
 
-# Build the app for production
+# Build the app
 RUN npm run build
 
-# Step 2: Serve the app
+# Step 2: Create the final production container
 FROM node:18-alpine
 
 # Set working directory
 WORKDIR /app
 
-# Copy built app from builder stage
-COPY --from=builder /app /app
+# Copy built files from the builder stage
+COPY --from=builder /app/dist /app/dist
+COPY --from=builder /app/package.json /app/package.json
+COPY --from=builder /app/node_modules /app/node_modules
 
-# Install only production dependencies
-RUN npm install --production
-
-# Expose the port that the app will run on
+# Expose the port the app runs on
 EXPOSE 3000
 
-# Run the app
-CMD ["npm", "start"]
+# Start the app
+CMD ["npx", "serve", "-s", "dist"]
