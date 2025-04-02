@@ -1,5 +1,5 @@
 defaultNamespace: my-website
 targetCustomizations:
   - name: website-deployment
-    clusterSelector: {}  # Deploys to all clusters (modify if needed)
-    path: "./fleet"  # This tells Fleet to deploy everything in the 'fleet' folder
+    clusterSelector: {} 
+    path: "./fleet" 
